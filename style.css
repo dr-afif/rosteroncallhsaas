@@ -66,4 +66,8 @@ h2 {
 .icon-link svg {
   vertical-align: middle;
 }
+.icon-svg {
+  width: 32px;
+  height: 32px;
+}
 
