@@ -1,0 +1,51 @@
+body {
+  font-family: sans-serif;
+  padding: 20px;
+  margin: 0;
+  background-color: #f0f2f5;
+}
+
+h1 {
+  font-size: 28px;
+  line-height: 1.4;
+}
+
+h2 {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.doctor-card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 24px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.doctor-card h3 {
+  margin: 12px 0 4px;
+  font-style: italic;
+  color: darkblue;
+}
+
+.doctor-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 6px 0;
+}
+
+.doctor-info {
+  flex-grow: 1;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.contact-icons a {
+  margin-left: 6px;
+  font-size: 18px;
+  text-decoration: none;
+}

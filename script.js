@@ -1,7 +1,7 @@
 const SPREADSHEET_ID = '1Q99y9K81cI0zVoRfso2JPuIX2IlWgNkRFaZs1RKkoIU';
 const TIMETABLE_RANGE = 'Timetable!A1:Z31';
 const CONTACTS_RANGE = 'Contacts!A1:B100';
-const API_KEY = 'AIzaSyCuQd0yaWz9dQ7_3MBXKt7WV9MIRo4h7kU'; // ⚠️ Replace this!
+const API_KEY = 'AIzaSyCuQd0yaWz9dQ7_3MBXKt7WV9MIRo4h7kU';
 
 // Add formatted date to header
 const today = new Date();
@@ -11,13 +11,9 @@ const formattedDate = today.toLocaleDateString('en-MY', {
   month: 'short',
   day: 'numeric'
 });
-
-document.querySelector('h1').innerHTML += `<br><small style="font-weight: normal;">${formattedDate}</small>`;
-
-// ... rest of your script
+document.querySelector('#header-title').innerHTML += `<br><small style="font-weight: normal;">${formattedDate}</small>`;
 
 function formatTodayAsDDMMYYYY() {
-  const today = new Date();
   const dd = String(today.getDate()).padStart(2, '0');
   const mm = String(today.getMonth() + 1).padStart(2, '0');
   const yyyy = today.getFullYear();
@@ -47,34 +43,29 @@ async function loadDashboard() {
     return;
   }
 
-  const today = formatTodayAsDDMMYYYY();
+  const todayStr = formatTodayAsDDMMYYYY();
   const headers = timetable[0].slice(1); // skip "Date"
-  const todayRow = timetable.find(row => row[0] === today);
+  const todayRow = timetable.find(row => row[0] === todayStr);
 
   if (!todayRow) {
-    container.innerHTML = `<p>No on-call schedule found for today (${today}).</p>`;
+    container.innerHTML = `<p>No on-call schedule found for today (${todayStr}).</p>`;
     return;
   }
 
-  // Map of names to phone numbers
   const contactsMap = {};
   contacts.forEach(([name, phone]) => {
-    if (name && phone) {
-      contactsMap[name.trim()] = phone.trim();
-    }
+    if (name && phone) contactsMap[name.trim()] = phone.trim();
   });
 
-  // Step 1: Build grouped data
-  const grouped = {}; // { RESQ: { AM: [], PM: [] }, SURGICAL: { ACTIVE CALL: [], ... } }
+  const grouped = {}; // { RESQ: { AM: [...], PM: [...] }, etc. }
 
   headers.forEach((dept, i) => {
     const cell = todayRow[i + 1];
     if (!cell) return;
 
-    const doctors = cell.split(/\r?\n/).map(d => d.trim()).filter(d => d);
+    const doctors = cell.split(/\r?\n/).map(d => d.trim()).filter(Boolean);
     if (!doctors.length) return;
 
-    // Split department name
     const parts = dept.split(' ');
     const main = parts[0].toUpperCase();
     const sub = dept.slice(main.length).trim();
@@ -90,27 +81,28 @@ async function loadDashboard() {
     });
   });
 
-  // Step 2: Build HTML
+  // Render HTML
   let html = '';
   Object.entries(grouped).forEach(([mainDept, subGroups]) => {
-    html += `<div class="doctor-card"><h2 style="margin-top:10px; text-align: center;">${mainDept}</h2>`;
+    html += `<div class="doctor-card"><h2>${mainDept}</h2>`;
 
     Object.entries(subGroups).forEach(([subDept, doctors]) => {
       if (subDept !== 'General') {
-        html += `<h3 style="margin-top: 20px; margin-bottom: 4px; font-style: italic; color: darkblue;">${subDept}</h3>`;
+        html += `<h3>${subDept}</h3>`;
       }
+
       doctors.forEach(({ name, phone }) => {
         const tel = phone !== 'Unknown' ? `tel:${phone}` : '#';
         const wa = phone !== 'Unknown' ? `https://wa.me/6${phone.replace(/\D/g, '')}` : '#';
 
         html += `
-          <div style="display: flex; align-items: center; justify-content: space-between; margin: 4px 0;">
-            <div style="flex-grow: 1; display: flex; gap: 10px; align-items: center;">
+          <div class="doctor-row">
+            <div class="doctor-info">
               <strong>${name}</strong>
               <span>${phone}</span>
             </div>
-            <div>
-              <a href="${tel}" title="Call ${name}" style="margin-right: 8px;">📞</a>
+            <div class="contact-icons">
+              <a href="${tel}" title="Call ${name}">📞</a>
               <a href="${wa}" title="WhatsApp ${name}" target="_blank">💬</a>
             </div>
           </div>
