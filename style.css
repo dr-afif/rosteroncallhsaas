@@ -48,4 +48,10 @@ h2 {
   margin-left: 6px;
   font-size: 18px;
   text-decoration: none;
+  color: inherit;
 }
+.contact-icons a:hover {
+  transform: scale(1.2);
+  color: darkgreen;
+}
+
