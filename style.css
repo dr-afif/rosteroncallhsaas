@@ -54,4 +54,16 @@ h2 {
   transform: scale(1.2);
   color: darkgreen;
 }
+.icon-link {
+  display: inline-block;
+  margin-left: 10px;
+  transition: transform 0.2s ease;
+}
+
+.icon-link:hover {
+  transform: scale(1.2);
+}
+.icon-link svg {
+  vertical-align: middle;
+}
 
