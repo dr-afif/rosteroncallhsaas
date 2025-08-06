@@ -1,14 +1,6 @@
 const BACKEND_URL = 'https://sheets-proxy-backend.onrender.com';
 
-const now = new Date();
-const today = new Date(now);
-
-if (now.getHours() < 8) {
-  today.setDate(today.getDate() - 1);
-}
-
-console.log('Effective dashboard date:', today.toString());
-
+const today = new Date();
 const formattedDate = today.toLocaleDateString('en-MY', {
   weekday: 'long',
   year: 'numeric',
@@ -47,11 +39,8 @@ async function loadDashboard() {
     container.innerHTML = '<p>No data found in the sheets.</p>';
     return;
   }
-  
-
 
   const todayStr = formatTodayAsDDMMYYYY();
-  console.log('Looking for schedule on:', todayStr);
   const headers = timetable[0].slice(1); // skip "Date"
   const todayRow = timetable.find(row => row[0] === todayStr);
 
@@ -132,4 +121,3 @@ async function loadDashboard() {
 }
 
 document.addEventListener('DOMContentLoaded', loadDashboard);
-
