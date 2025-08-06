@@ -7,6 +7,8 @@ if (now.getHours() < 8) {
   today.setDate(today.getDate() - 1);
 }
 
+console.log('Effective dashboard date:', today.toString());
+
 const formattedDate = today.toLocaleDateString('en-MY', {
   weekday: 'long',
   year: 'numeric',
@@ -45,8 +47,11 @@ async function loadDashboard() {
     container.innerHTML = '<p>No data found in the sheets.</p>';
     return;
   }
+  
+
 
   const todayStr = formatTodayAsDDMMYYYY();
+  console.log('Looking for schedule on:', todayStr);
   const headers = timetable[0].slice(1); // skip "Date"
   const todayRow = timetable.find(row => row[0] === todayStr);
 
