@@ -1,6 +1,6 @@
 const SPREADSHEET_ID = '1Q99y9K81cI0zVoRfso2JPuIX2IlWgNkRFaZs1RKkoIU';
-const TIMETABLE_RANGE = 'Timetable!A1:Z31';
-const CONTACTS_RANGE = 'Contacts!A1:B100';
+const TIMETABLE_RANGE = 'Timetable!A1:Z100';
+const CONTACTS_RANGE = 'Contacts!A1:B300';
 const API_KEY = 'AIzaSyCuQd0yaWz9dQ7_3MBXKt7WV9MIRo4h7kU';
 
 // Add formatted date to header
