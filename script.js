@@ -1,6 +1,12 @@
 const BACKEND_URL = 'https://sheets-proxy-backend.onrender.com';
 
 const today = new Date();
+const today = new Date(now);
+
+// If current time is before 8:00 AM, subtract one day to use yesterday's date
+if (now.getHours() < 8) {
+  today.setDate(today.getDate() - 1);
+}
 const formattedDate = today.toLocaleDateString('en-MY', {
   weekday: 'long',
   year: 'numeric',
