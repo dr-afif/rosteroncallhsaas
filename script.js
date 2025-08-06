@@ -1,6 +1,6 @@
 const BACKEND_URL = 'https://sheets-proxy-backend.onrender.com';
 
-const today = new Date();
+const now = new Date();
 const today = new Date(now);
 
 // If current time is before 8:00 AM, subtract one day to use yesterday's date
