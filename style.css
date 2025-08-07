@@ -84,25 +84,44 @@ h2 {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-#header-container {
+
+/* Header container styling */
+#header-title {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 12px;
   flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 1em;
-  text-align: left;
+  text-align: center;
+  padding: 10px;
 }
 
+/* Logo responsiveness */
 #logo {
-  max-height: 70px;
+  height: 2.8em;
+  max-width: 100%;
   height: auto;
-  width: auto;
+  flex-shrink: 0;
 }
 
-#header-title {
-  font-size: 1.5em;
-  font-weight: bold;
-  line-height: 1.3;
+/* Make sure text scales too */
+.header-text {
+  font-size: 1.6em;
+  line-height: 1.4;
 }
 
+/* Mobile scaling */
+@media (max-width: 600px) {
+  #header-title {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  #logo {
+    height: 3em;
+  }
+
+  .header-text {
+    font-size: 1.4em;
+  }
+}
