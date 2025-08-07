@@ -106,6 +106,7 @@ h2 {
   width: auto;
   max-width: 12vw;
   flex-shrink: 0;
+  vertical-align: middle;
 }
 
 /* Mobile scaling */
