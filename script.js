@@ -52,11 +52,21 @@ function updateLastUpdatedTime() {
 }
 
 async function fetchSheetData(endpoint) {
-  const res = await fetch(`${BACKEND_URL}/${endpoint}`);
-  if (!res.ok) throw new Error(`Failed to fetch ${endpoint}`);
-  const data = await res.json();
-  return data.values || [];
+  try {
+    const res = await fetch(`${BACKEND_URL}/${endpoint}`, { cache: "no-store" });
+    if (!res.ok) {
+      const text = await res.text();
+      console.error(`Failed to fetch ${endpoint}:`, res.status, text);
+      throw new Error(`Fetch error for ${endpoint}`);
+    }
+    const data = await res.json();
+    return data.values || [];
+  } catch (err) {
+    console.error(`Error fetching ${endpoint}:`, err);
+    return null; // <-- so we can check in loadDashboard
+  }
 }
+
 
 async function loadDashboard() {
   const container = document.getElementById('doctor-list');
@@ -76,7 +86,12 @@ async function loadDashboard() {
       fetchSheetData('timetable'),
       fetchSheetData('contacts')
     ]);
-
+    
+    if (!timetable || !contacts) {
+      console.error('One or both datasets failed to load');
+      if (!cached) container.innerHTML = '<p>Unable to load data. Please try again later.</p>';
+      return;
+    }
     setCachedData(todayStr, { timetable, contacts });
     renderDashboard(timetable, contacts);
     updateLastUpdatedTime();
@@ -168,3 +183,4 @@ function renderDashboard(timetable, contacts) {
 }
 
 document.addEventListener('DOMContentLoaded', loadDashboard);
+ 
