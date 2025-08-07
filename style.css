@@ -98,11 +98,13 @@ h2 {
 
 /* Logo responsiveness */
 #logo {
-  height: 2.8em;
-  max-width: 100%;
-  height: auto;
+  height: 3em;
+  max-height: 64px;
+  width: auto;
+  max-width: 100%;  /* <-- Add this line */
   flex-shrink: 0;
 }
+
 
 /* Make sure text scales too */
 .header-text {
@@ -113,12 +115,16 @@ h2 {
 /* Mobile scaling */
 @media (max-width: 600px) {
   #header-title {
-    flex-direction: column;
-    gap: 6px;
+    flex-direction: row;        /* Keep logo left, text right */
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    flex-wrap: nowrap;          /* Prevent stacking */
   }
 
   #logo {
-    height: 3em;
+    height: 2.4em;
+    max-height: 48px;
   }
 
   .header-text {
