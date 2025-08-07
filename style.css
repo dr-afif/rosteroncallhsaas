@@ -111,7 +111,7 @@ h2 {
 /* Text wrapping inside span to avoid overflow */
 #header-title span {
   display: inline-block;
-  text-align: left;
+  text-align: center;
 }
 
 /* Mobile-specific adjustments */
@@ -138,7 +138,7 @@ h2 {
 #header-date small {
   display: block;
   text-align: center;
-  font-size: 0.95rem;
+  font-size: 1.5rem;
   margin-top: -0.5em;
   margin-bottom: 20px;
   color: #555;
