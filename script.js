@@ -1,5 +1,3 @@
-7/8/25 922AM
-
 const BACKEND_URL = 'https://sheets-proxy-backend.onrender.com';
 
 const now = new Date();
