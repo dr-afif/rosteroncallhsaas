@@ -84,4 +84,25 @@ h2 {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+#header-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 1em;
+  text-align: left;
+}
+
+#logo {
+  max-height: 70px;
+  height: auto;
+  width: auto;
+}
+
+#header-title {
+  font-size: 1.5em;
+  font-weight: bold;
+  line-height: 1.3;
+}
 
