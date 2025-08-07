@@ -12,7 +12,7 @@ const formattedDate = today.toLocaleDateString('en-MY', {
   month: 'short',
   day: 'numeric'
 });
-document.querySelector('#header-title').innerHTML += `<br><small style="font-weight: normal;">${formattedDate}</small>`;
+document.querySelector('#header-date').innerHTML += `<br><small style="font-weight: normal;">${formattedDate}</small>`;
 
 function formatTodayAsDDMMYYYY() {
   const dd = String(today.getDate()).padStart(2, '0');

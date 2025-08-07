@@ -134,3 +134,10 @@ h2 {
   }
 }
 
+#header-date small {
+  display: block;
+  text-align: center;
+  font-size: 0.95rem;
+  margin-top: -0.5em;
+  color: #555;
+}
