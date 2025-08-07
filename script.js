@@ -1,9 +1,10 @@
+7/8/25 922AM
+
 const BACKEND_URL = 'https://sheets-proxy-backend.onrender.com';
 
 const now = new Date();
 const today = new Date(now);
 
-// If current time is before 8:00 AM, subtract one day to use yesterday's date
 if (now.getHours() < 8) {
   today.setDate(today.getDate() - 1);
 }
@@ -22,12 +23,37 @@ function formatTodayAsDDMMYYYY() {
   return `${dd}/${mm}/${yyyy}`;
 }
 
+function getCachedData(key) {
+  const item = localStorage.getItem(key);
+  if (!item) return null;
+
+  try {
+    const parsed = JSON.parse(item);
+    const age = Date.now() - parsed.timestamp;
+    if (age > 86400000) { // 24 hours
+      localStorage.removeItem(key);
+      return null;
+    }
+    return parsed.data;
+  } catch {
+    localStorage.removeItem(key);
+    return null;
+  }
+}
+
+function setCachedData(key, data) {
+  localStorage.setItem(key, JSON.stringify({ data, timestamp: Date.now() }));
+}
+
+function updateLastUpdatedTime() {
+  const footer = document.getElementById('last-updated');
+  const time = new Date().toLocaleString('en-MY');
+  footer.textContent = `Last updated: ${time}`;
+}
+
 async function fetchSheetData(endpoint) {
   const res = await fetch(`${BACKEND_URL}/${endpoint}`);
-  if (!res.ok) {
-    console.error(`Failed to fetch ${endpoint}:`, res.status, await res.text());
-    return [];
-  }
+  if (!res.ok) throw new Error(`Failed to fetch ${endpoint}`);
   const data = await res.json();
   return data.values || [];
 }
@@ -36,18 +62,34 @@ async function loadDashboard() {
   const container = document.getElementById('doctor-list');
   if (!container) return;
 
-  container.innerHTML = '<p>Loading...</p>';
+  const todayStr = formatTodayAsDDMMYYYY();
 
-  const timetable = await fetchSheetData('timetable');
-  const contacts = await fetchSheetData('contacts');
-
-  if (!timetable.length || !contacts.length) {
-    container.innerHTML = '<p>No data found in the sheets.</p>';
-    return;
+  const cached = getCachedData(todayStr);
+  if (cached) {
+    renderDashboard(cached.timetable, cached.contacts);
+  } else {
+    container.innerHTML = '<p>Loading...</p>';
   }
 
+  try {
+    const [timetable, contacts] = await Promise.all([
+      fetchSheetData('timetable'),
+      fetchSheetData('contacts')
+    ]);
+
+    setCachedData(todayStr, { timetable, contacts });
+    renderDashboard(timetable, contacts);
+    updateLastUpdatedTime();
+  } catch (err) {
+    console.error(err);
+    if (!cached) container.innerHTML = '<p>Failed to load data. Please try again later.</p>';
+  }
+}
+
+function renderDashboard(timetable, contacts) {
+  const container = document.getElementById('doctor-list');
   const todayStr = formatTodayAsDDMMYYYY();
-  const headers = timetable[0].slice(1); // skip "Date"
+  const headers = timetable[0].slice(1);
   const todayRow = timetable.find(row => row[0] === todayStr);
 
   if (!todayRow) {
@@ -72,10 +114,9 @@ async function loadDashboard() {
     const parts = dept.split(' ');
     const main = parts[0].toUpperCase();
     const sub = dept.slice(main.length).trim();
-
-    if (!grouped[main]) grouped[main] = {};
     const subkey = sub || 'General';
 
+    if (!grouped[main]) grouped[main] = {};
     if (!grouped[main][subkey]) grouped[main][subkey] = [];
 
     doctors.forEach(name => {
