@@ -102,7 +102,7 @@ h2 {
 
 /* Logo responsiveness */
 #logo {
-  height: 2.2em;
+  height: 3em;
   width: auto;
   max-width: 12vw;
   flex-shrink: 0;
