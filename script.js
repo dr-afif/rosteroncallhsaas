@@ -21,6 +21,28 @@ function formatTodayAsDDMMYYYY() {
   return `${dd}/${mm}/${yyyy}`;
 }
 
+const LOADING_TIMEOUT_MS = 60000;
+
+function showLoading(timeoutMessage = null) {
+  const container = document.getElementById('doctor-list');
+  container.innerHTML = `
+    <div class="loading-spinner"></div>
+    <p style="text-align:center;">Loading...</p>
+  `;
+
+  if (timeoutMessage) {
+    setTimeout(() => {
+      const stillLoading = container.innerHTML.includes('loading-spinner');
+      if (stillLoading) {
+        container.innerHTML = `
+          <p style="text-align:center;">⚠️ ${timeoutMessage}</p>
+        `;
+      }
+    }, LOADING_TIMEOUT_MS);
+  }
+}
+
+
 function getCachedData(key) {
   const item = localStorage.getItem(key);
   if (!item) return null;
@@ -67,6 +89,7 @@ async function fetchSheetData(endpoint) {
 
 
 async function loadDashboard() {
+  showLoading("Server is taking too long to respond. Showing last cached data (if available)...");
   const container = document.getElementById('doctor-list');
   if (!container) return;
 
