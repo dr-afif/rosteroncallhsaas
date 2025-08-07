@@ -104,7 +104,7 @@ h2 {
 #logo {
   height: 4em;
   width: auto;
-  max-width: 15vw;
+  max-width: 25vw;
   flex-shrink: 0;
   vertical-align: middle;
 }
