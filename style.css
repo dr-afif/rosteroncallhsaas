@@ -119,5 +119,6 @@ h2 {
   #logo {
     height: 2em;
     max-width: 20vw;
+    vertical-align: middle;
   }
 }
