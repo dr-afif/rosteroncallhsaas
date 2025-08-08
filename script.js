@@ -133,10 +133,37 @@ function renderDashboard(timetable, contacts) {
     return;
   }
 
-  const contactsMap = {};
-  contacts.forEach(([name, phone]) => {
-    if (name && phone) contactsMap[name.trim()] = phone.trim();
-  });
+  // New format: columns like "MEDICAL NAME", "MEDICAL PHONE", "SURGICAL NAME", "SURGICAL PHONE", etc.
+  const contactsMap = {}; // contactsMap[main][name] = phone
+
+  if (contacts.length > 0) {
+    const headerRow = contacts[0];
+
+    for (let i = 0; i < headerRow.length; i += 2) {
+      const nameHeader = headerRow[i];
+      const phoneHeader = headerRow[i + 1];
+
+      if (!nameHeader || !phoneHeader) continue;
+
+      const deptMatch = nameHeader.match(/^(.+?)\s+NAME$/i);
+      if (!deptMatch) continue;
+
+      const dept = deptMatch[1].trim().toUpperCase(); // e.g., MEDICAL
+
+      if (!contactsMap[dept]) contactsMap[dept] = {};
+
+      // Start from row 1 (after header), read name-phone pairs
+      for (let j = 1; j < contacts.length; j++) {
+        const row = contacts[j];
+        const name = row[i]?.trim();
+        const phone = row[i + 1]?.trim();
+
+        if (name && phone) {
+          contactsMap[dept][name] = phone;
+        }
+      }
+    }
+  }
 
   const grouped = {};
 
@@ -156,7 +183,7 @@ function renderDashboard(timetable, contacts) {
     if (!grouped[main][subkey]) grouped[main][subkey] = [];
 
     doctors.forEach(name => {
-      const phone = contactsMap[name] || 'Unknown';
+      const phone = (contactsMap[main] && contactsMap[main][name]) || 'Unknown';
       grouped[main][subkey].push({ name, phone });
     });
   });
