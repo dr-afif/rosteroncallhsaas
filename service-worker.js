@@ -1,4 +1,4 @@
-const CACHE_NAME = "roster-cache-v2";
+const CACHE_NAME = "roster-cache-v3";
 const OFFLINE_URL = "./offline.html"; // Optional fallback page
 
 // Assets to pre-cache
