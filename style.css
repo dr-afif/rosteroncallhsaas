@@ -10,31 +10,32 @@ body {
   min-height: 100vh;
 }
 
-/* Header */
+/* Header - centered with stacked layout */
 #app-header {
   background: linear-gradient(90deg, #1976d2, #2196f3);
   color: white;
   padding: 1rem;
+  text-align: center;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
+
 #logo {
-  height: 40px;
+  height: 60px; /* slightly smaller than before */
   width: auto;
+  margin-bottom: 0.5rem;
 }
+
 .header-title {
-  font-size: 1.5rem;
+  font-size: 1.8rem; /* smaller than before */
   font-weight: 600;
+  margin-bottom: 0.3rem;
 }
+
 #header-date {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   opacity: 0.9;
-  margin-top: 0.3rem;
 }
+
 
 /* Doctor cards */
 .doctor-card {
