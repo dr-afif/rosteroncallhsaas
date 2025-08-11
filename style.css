@@ -20,7 +20,7 @@ body {
 }
 
 #logo {
-  height: 60px; /* slightly smaller than before */
+  height: 100px; /* slightly smaller than before */
   width: auto;
   margin-bottom: 0.5rem;
 }
@@ -32,7 +32,7 @@ body {
 }
 
 #header-date {
-  font-size: 1rem;
+  font-size: 1.5rem;
   opacity: 0.9;
 }
 
