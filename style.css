@@ -26,13 +26,13 @@ body {
 }
 
 .header-title {
-  font-size: 1.8rem; /* smaller than before */
+  font-size: 2rem; /* smaller than before */
   font-weight: 600;
   margin-bottom: 0.3rem;
 }
 
 #header-date {
-  font-size: 0.95rem;
+  font-size: 1rem;
   opacity: 0.9;
 }
 
@@ -48,12 +48,12 @@ body {
 .doctor-card h2 {
   background: #f1f5fb;
   padding: 0.75rem 1rem;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   border-bottom: 1px solid #e0e6ed;
 }
 .doctor-card h3 {
   padding: 0.5rem 1rem;
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: #1976d2;
 }
 
