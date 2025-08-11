@@ -21,6 +21,21 @@ function formatTodayAsDDMMYYYY() {
   return `${dd}/${mm}/${yyyy}`;
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      // Switch active tab button
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      // Switch tab content
+      const target = btn.getAttribute("data-tab");
+      document.querySelectorAll(".tab-content").forEach(sec => sec.classList.remove("active"));
+      document.querySelector(`#tab-${target}`).classList.add("active");
+    });
+  });
+});
+
 const LOADING_TIMEOUT_MS = 60000;
 
 function showLoading(timeoutMessage = null) {

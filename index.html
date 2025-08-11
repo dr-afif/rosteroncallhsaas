@@ -10,31 +10,53 @@
   <link rel="icon" href="data:,">
 </head>
 <body>
+  <header id="main-header">
+    <h1 id="header-title">
+      <img src="icons/logo.png" alt="Logo" id="logo">
+      <div class="header-text" style="text-align: center;">
+        HSAAS <br> On-Call Doctors
+      </div>
+    </h1>
+    <div id="header-date"></div>
+  </header>
 
-  <header id="app-header">
-  <img src="icons/logo.png" alt="Logo" id="logo">
-  <h1 class="header-title">HSAAS <br> On-Call Doctors</h1>
-  <div id="header-date"></div>
-</header>
+<!-- Tabs -->
+<div id="tab-bar">
+  <button class="tab-button active" data-tab="dashboard">Dashboard</button>
+  <button class="tab-button" data-tab="contacts">Contacts</button>
+</div>
 
-  <main id="doctor-list">
-    Loading...
+<!-- Tab Content -->
+<div id="tab-content">
+  <div id="dashboard-tab">
+    <div id="doctor-list">Loading...</div>
+  </div>
+  <div id="contacts-tab" style="display:none;">
+    <div id="contacts-list">Loading...</div>
+  </div>
+</div>
+
+
+  <!-- Tabs -->
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="contacts">Contacts</button>
+  </nav>
+
+  <!-- Tab Content -->
+  <main>
+    <section id="tab-dashboard" class="tab-content active">
+      <div id="doctor-list">Loading...</div>
+    </section>
+
+    <section id="tab-contacts" class="tab-content">
+      <div id="contacts-list">Loading contacts...</div>
+    </section>
   </main>
 
-  <footer id="app-footer">
-    <small id="last-updated"></small><br>
-    <small>&copy; Dr. Muhammad Afif Abdullah 2025</small>
-  </footer>
+  <footer id="last-updated"></footer>
+  <footer id="copyright">&copy; Muhammad Afif Abdullah 2025</footer>
 
   <script src="script.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('./service-worker.js')
-          .then(reg => console.log('ServiceWorker registered:', reg.scope))
-          .catch(err => console.log('SW registration failed:', err));
-      });
-    }
-  </script>
 </body>
 </html>
