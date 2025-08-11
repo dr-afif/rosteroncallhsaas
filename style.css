@@ -54,6 +54,7 @@ body {
 .doctor-card h3 {
   padding: 0.5rem 1rem;
   font-size: 1.2rem;
+  font-style:italic;
   color: #1976d2;
   /* border-top: 1px solid #e0e6ed; */
 }
