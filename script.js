@@ -246,6 +246,112 @@ function renderDashboard(timetable, contacts) {
 }
 
 document.addEventListener('DOMContentLoaded', loadDashboard);
+
+async function loadContacts() {
+  showLoading("Fetching all contacts...");
+
+  const container = document.getElementById('contacts-list');
+  if (!container) return;
+
+  try {
+    const contacts = await fetchSheetData('contacts');
+    if (!contacts || contacts.length === 0) {
+      container.innerHTML = '<p>No contacts found.</p>';
+      return;
+    }
+
+    // contacts[0] is headers: e.g. MEDICAL NAME, MEDICAL PHONE, SURGICAL NAME, SURGICAL PHONE, ...
+    const headerRow = contacts[0];
+    const grouped = {};
+
+    for (let i = 0; i < headerRow.length; i += 2) {
+      const nameHeader = headerRow[i];
+      const phoneHeader = headerRow[i + 1];
+      if (!nameHeader || !phoneHeader) continue;
+
+      const deptMatch = nameHeader.match(/^(.+?)\s+NAME$/i);
+      if (!deptMatch) continue;
+      const dept = deptMatch[1].trim().toUpperCase();
+
+      if (!grouped[dept]) grouped[dept] = [];
+
+      for (let j = 1; j < contacts.length; j++) {
+        const row = contacts[j];
+        const name = row[i]?.trim();
+        const phone = row[i + 1]?.trim();
+        if (name && phone) {
+          grouped[dept].push({ name, phone });
+        }
+      }
+    }
+
+    renderContacts(grouped);
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = '<p>Failed to load contacts.</p>';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Tab switching
+  document.querySelectorAll('.tab-button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const selectedTab = btn.getAttribute('data-tab');
+
+      // Toggle active button
+      document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Toggle tab content
+      document.getElementById('dashboard-tab').style.display = selectedTab === 'dashboard' ? '' : 'none';
+      document.getElementById('contacts-tab').style.display = selectedTab === 'contacts' ? '' : 'none';
+
+      // Load content if not already loaded
+      if (selectedTab === 'dashboard') {
+        loadDashboard();
+      } else if (selectedTab === 'contacts') {
+        if (!document.getElementById('contacts-list').dataset.loaded) {
+          loadContacts();
+          document.getElementById('contacts-list').dataset.loaded = "true";
+        }
+      }
+    });
+  });
+});
+
+
+function renderContacts(grouped) {
+  const container = document.getElementById('contacts-list');
+  let html = '';
+
+  Object.entries(grouped).forEach(([dept, contacts]) => {
+    html += `<div class="doctor-card"><h2>${dept}</h2>`;
+    contacts.forEach(({ name, phone }) => {
+      const tel = `tel:${phone}`;
+      const wa = `https://wa.me/6${phone.replace(/\D/g, '')}`;
+      html += `
+        <div class="doctor-row">
+          <div class="doctor-info">
+            <strong>${name}</strong>
+            <span>${phone}</span>
+          </div>
+          <div class="contact-icons">
+            <a href="${tel}" class="icon-link" title="Call ${name}">
+              📞
+            </a>
+            <a href="${wa}" class="icon-link" title="WhatsApp ${name}" target="_blank">
+              💬
+            </a>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  });
+
+  container.innerHTML = html || '<p>No contacts available.</p>';
+}
+
  
 // Listen for SW update message
 if ('serviceWorker' in navigator) {
