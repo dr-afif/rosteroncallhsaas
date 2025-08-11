@@ -49,12 +49,13 @@ body {
   background: #d1eeff;
   padding: 0.75rem 1rem;
   font-size: 1.5rem;
-  border-bottom: 1px solid #e0e6ed;
+  /* border-bottom: 1px solid #e0e6ed; */
 }
 .doctor-card h3 {
   padding: 0.5rem 1rem;
   font-size: 1.2rem;
   color: #1976d2;
+  border-top: 1px solid #e0e6ed;
 }
 
 /* Doctor row */
