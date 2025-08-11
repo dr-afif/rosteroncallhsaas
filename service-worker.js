@@ -1,7 +1,4 @@
-const CACHE_NAME = "roster-cache-v3";
-const OFFLINE_URL = "./offline.html"; // Optional fallback page
-
-// Assets to pre-cache
+const CACHE_NAME = "roster-cache-v4"; // bump version from v3 to v4
 const urlsToCache = [
   "./",
   "./index.html",
@@ -10,77 +7,67 @@ const urlsToCache = [
   "./manifest.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
-  OFFLINE_URL
+  "./offline.html"
 ];
 
-// Install – cache static assets
+// Install: cache required files
 self.addEventListener("install", event => {
+  self.skipWaiting(); // Activate immediately
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(urlsToCache);
     })
   );
-  self.skipWaiting();
 });
 
-// Activate – remove old caches
+// Activate: delete old caches, claim control
 self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
+    caches.keys().then(keys =>
+      Promise.all(
         keys.map(key => {
-          if (key !== CACHE_NAME) return caches.delete(key);
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
         })
-      );
+      )
+    ).then(() => {
+      self.clients.claim();
     })
   );
-  self.clients.claim();
+
+  // Notify all open clients that app has updated
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true })
+      .then(clients => {
+        clients.forEach(client => {
+          client.postMessage({ type: "UPDATE_AVAILABLE" });
+        });
+      })
+  );
 });
 
-// Fetch – stale-while-revalidate + offline fallback
+// Fetch: stale-while-revalidate
 self.addEventListener("fetch", event => {
-  const request = event.request;
-
-  // API requests (e.g., to Render backend)
-  if (request.url.includes("/timetable") || request.url.includes("/contacts")) {
-    event.respondWith(
-      fetchWithTimeout(request, 8000) // try live API, fallback to cache
-        .catch(() => caches.match(request))
-        .catch(() => caches.match(OFFLINE_URL))
-    );
-    return;
-  }
-
-  // Static files: stale-while-revalidate
   event.respondWith(
-    caches.match(request).then(cached => {
-      const fetchPromise = fetch(request)
+    caches.match(event.request).then(cachedResponse => {
+      const fetchPromise = fetch(event.request)
         .then(networkResponse => {
-          if (networkResponse && networkResponse.status === 200) {
-            caches.open(CACHE_NAME).then(cache => cache.put(request, networkResponse.clone()));
+          if (event.request.method === "GET" && networkResponse.ok) {
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(event.request, networkResponse.clone());
+            });
           }
           return networkResponse;
         })
-        .catch(() => cached || caches.match(OFFLINE_URL));
+        .catch(() => {
+          if (cachedResponse) return cachedResponse;
+          if (event.request.mode === "navigate") {
+            return caches.match("./offline.html");
+          }
+        });
 
-      return cached || fetchPromise;
+      return cachedResponse || fetchPromise;
     })
   );
 });
-
-// Timeout helper – avoid PWA stuck on loading
-function fetchWithTimeout(request, timeout = 8000) {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error("Fetch timeout")), timeout);
-    fetch(request).then(
-      response => {
-        clearTimeout(timer);
-        resolve(response);
-      },
-      err => {
-        clearTimeout(timer);
-        reject(err);
-      }
-    );
-  });
-}
