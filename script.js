@@ -210,6 +210,7 @@ function buildDashboardHTML(timetable, contacts) {
               <span>${phone}</span>
             </div>
             <div class="contact-icons">
+              <a href="${tel}" title="Call ${name}" class="icon-link">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#4CAF50" viewBox="0 0 24 24">
                   <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.11-.21c1.2.48 2.5.74 3.83.74a1 1 0 011 1v3.5a1 1 0 01-1 1A17.91 17.91 0 013 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.33.26 2.63.74 3.83a1 1 0 01-.21 1.11l-2.41 2.41z"/>
                 </svg>
